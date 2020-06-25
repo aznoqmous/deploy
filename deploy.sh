@@ -21,13 +21,12 @@ init(){
   read -p "Deployment path (default: $(pwd)): " path
   path=${path:-$(pwd)}
   read -p "Server user: " user
+  read -p "Specify folders to ignore separated by comas (ex: vendor,node_modules,...): " ignored
 
   echo "server $server" > "$config_file"
   echo "path $path" >> "$config_file"
   echo "user $user" >> "$config_file"
   echo ".deploy*" > "$ignore_file"
-
-  read -p "Specify folders to ignore separated by comas (ex: vendor,node_modules,...): " ignored
   echo $ignored | tr "," "\n" >> "$ignore_file"
 }
 
