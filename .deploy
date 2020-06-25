@@ -1,0 +1,3 @@
+server preprod
+path /home/dev0/www/test
+user dev0
