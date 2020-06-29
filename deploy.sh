@@ -54,19 +54,26 @@ dsync(){
     then
         # local deployment
         destinationPath="$path"
+        state 0
+        if [[ -f "$ignore_file" ]]
+        then
+            rsync -rl --info=progress2 --exclude-from="$ignore_file" . "$destinationPath" > /dev/null 2> /dev/null
+        else
+            rsync -rl --info=progress2 . "$destinationPath" > /dev/null 2> /dev/null
+        fi
+        state 1
     else
         # remote deployment
         destinationPath="$server:$path"
+        state 0
+        if [[ -f "$ignore_file" ]]
+        then
+            rsync -rl --info=progress2 --exclude-from="$ignore_file" -e ssh . "$destinationPath" > /dev/null 2> /dev/null
+        else
+            rsync -rl --info=progress2 -e ssh . "$destinationPath" > /dev/null 2> /dev/null
+        fi
+        state 1
     fi
-
-    state 0
-    if [[ -f "$ignore_file" ]]
-    then
-        rsync -rl --info=progress2 --exclude-from="$ignore_file" -e ssh . "$destinationPath" > /dev/null 2> /dev/null
-    else
-        rsync -rl --info=progress2 -e ssh . "$destinationPath" > /dev/null 2> /dev/null
-    fi
-    state 1
 }
 
 # RSYNC FILES
