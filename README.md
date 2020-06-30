@@ -25,3 +25,8 @@ vendor
 
 ## Pre and Post deployment script
 You can had custom script executed before/after deployment by creating `.deploy_pre` and `.deploy_post` files
+
+You can use deploy configuration variables inside those scripts :
+- `$server`
+- `$path`
+- `$user`

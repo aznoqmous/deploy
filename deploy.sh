@@ -131,6 +131,14 @@ lastupdate(){
     echo "$lastupdate";
 }
 
+remote_execute(){
+    script=$(cat "$1")
+    script=$(echo "$script" | sed "s#\$path#$path#g")
+    script=$(echo "$script" | sed "s#\$server#$server#g")
+    script=$(echo "$script" | sed "s#\$user#$user#g")
+    echo "$script" | ssh "$server" 'bash -s'
+}
+
 #  ARGUMENTS
 config_file=".deploy"
 ignore_file=".deploy_ignore"
@@ -160,7 +168,7 @@ if [[ -z "$mode" ]]; then
         chmod +x "$deploy_pre_script"
 
         if [[ ! -z "$server" ]]; then
-            ssh "$server" 'bash -s' < "$(pwd)/$deploy_pre_script"
+            remote_execute "$(pwd)/$deploy_pre_script"
         else
             . "$(pwd)/$deploy_pre_script"
         fi
@@ -174,7 +182,7 @@ if [[ -z "$mode" ]]; then
         chmod +x "$deploy_post_script"
 
         if [[ ! -z "$server" ]]; then
-            ssh "$server" 'bash -s' < "$(pwd)/$deploy_post_script"
+            remote_execute "$(pwd)/$deploy_post_script"
         else
             . "$(pwd)/$deploy_post_script"
         fi
