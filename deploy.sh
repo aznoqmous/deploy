@@ -95,7 +95,7 @@ deploy(){
     while [[ $(state) = 0 ]]; do
         char=$(($i%4))
         i=$(($i+1))
-        printf "${symbols[$char]} deploying...\r"
+        printf "${symbols[$char]} deploying current directory to $server $path...\r"
     done
 
     if [[ ! -z $user ]]
@@ -129,6 +129,8 @@ config_file=".deploy"
 ignore_file=".deploy_ignore"
 state_file="/tmp/deploy/state"
 mode=$1
+deploy_pre_script=".deploy_pre"
+deploy_post_script=".deploy_post"
 
 # BUILD CONFIG
 if [[ ! -f "$config_file" ]]
@@ -144,8 +146,18 @@ done < "$config_file"
 
 # DO
 if [[ -z "$mode" ]]; then
+    if [[ -f "$deploy_pre_script" ]]; then
+        echo "Running pre deployment script"
+        chmod +x "$deploy_pre_script"
+        . "$(pwd)/$deploy_pre_script"
+    fi
     deploy
-    echo "Transfer done"
+    echo "Transfer done                                                        "
+    if [[ -f "$deploy_post_script" ]]; then
+        echo "Running post deployment script"
+        chmod +x "$deploy_post_script"
+        . "$(pwd)/$deploy_post_script"
+    fi
 elif [[ $mode = 'watch' ]]; then
     printf "Sending...\r"
     while true;

@@ -21,3 +21,6 @@ You can exclude directories from deployment with `.deploy_ignore` file :
 node_modules
 vendor
 ```
+
+## Pre and Post deployment script
+You can had custom script executed before/after deployment by creating `.deploy_pre` and `.deploy_post` files
