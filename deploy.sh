@@ -98,9 +98,15 @@ deploy(){
         printf "${symbols[$char]} deploying current directory to $server $path...\r"
     done
 
+
     if [[ ! -z $user ]]
     then
-        ssh -t "$server" "chown -R $user. $path" > /dev/null 2> /dev/null
+        if [[ ! -z "$server" ]]
+        then
+            ssh -t "$server" "chown -R $user. $path" > /dev/null 2> /dev/null
+        else
+            chown -R "$user." "$path"
+        fi
     fi
 
 }
