@@ -1,9 +1,10 @@
 # deploy
 
-Provide fast deployment command, including watcher and ignore file
+Provide fast deployment command, including watcher, ignore file and pre/post deployment scripts
 
 `deploy`    
 `deploy watch`  deploy on update, will only deploy updated files  
+`deploy config`  show deploy configuration file content
 
 ## Configuration file
 `deploy` hold its configuration inside a `.deploy` file with the following arguments :

@@ -165,4 +165,10 @@ elif [[ $mode = 'watch' ]]; then
         deploy_on_update
         sleep 1
     done
+elif [[ $mode = 'config' ]]; then
+    if [[ -f "$config_file" ]]; then
+        cat "$config_file"
+    else
+        echo "No deploy configuration found in current folder"
+    fi
 fi
