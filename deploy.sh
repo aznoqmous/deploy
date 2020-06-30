@@ -111,6 +111,7 @@ deploy(){
 
 }
 
+# WATCH METHODS
 lastdeploy=0
 deploy_on_update(){
     lastupdate=$(lastupdate)
@@ -152,19 +153,36 @@ done < "$config_file"
 
 # DO
 if [[ -z "$mode" ]]; then
+
+    # BASIC DEPLOY COMMAND
     if [[ -f "$deploy_pre_script" ]]; then
         echo "Running pre deployment script"
         chmod +x "$deploy_pre_script"
-        . "$(pwd)/$deploy_pre_script"
+
+        if [[ ! -z "$server" ]]; then
+            ssh "$server" 'bash -s' < "$(pwd)/$deploy_pre_script"
+        else
+            . "$(pwd)/$deploy_pre_script"
+        fi
     fi
+
     deploy
     echo "Transfer done                                                        "
+
     if [[ -f "$deploy_post_script" ]]; then
         echo "Running post deployment script"
         chmod +x "$deploy_post_script"
-        . "$(pwd)/$deploy_post_script"
+
+        if [[ ! -z "$server" ]]; then
+            ssh "$server" 'bash -s' < "$(pwd)/$deploy_post_script"
+        else
+            . "$(pwd)/$deploy_post_script"
+        fi
     fi
+
 elif [[ $mode = 'watch' ]]; then
+
+    # WATCH COMMAND
     printf "Sending...\r"
     while true;
     do
@@ -172,6 +190,8 @@ elif [[ $mode = 'watch' ]]; then
         sleep 1
     done
 elif [[ $mode = 'config' ]]; then
+
+    # CONFIG COMMAND
     if [[ -f "$config_file" ]]; then
         cat "$config_file"
     else
